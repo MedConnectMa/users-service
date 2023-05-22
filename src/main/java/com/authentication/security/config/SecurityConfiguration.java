@@ -1,6 +1,5 @@
 package com.authentication.security.config;
 
-import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +23,7 @@ public class SecurityConfiguration {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/auth/**")//White list authorized without token
+                .requestMatchers("/api/auth/**", "/api/error")//White list authorized without token
                 .permitAll()
                 .anyRequest()
                 .authenticated()//any other request should be authenticated
