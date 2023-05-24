@@ -1,6 +1,8 @@
 FROM maven:3.9 AS maven
 WORKDIR /app
 COPY . /app
+
+RUN mvn clean install
 RUN mvn package
 
 FROM openjdk:20

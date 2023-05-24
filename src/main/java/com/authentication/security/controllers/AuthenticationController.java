@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,7 @@ import java.util.Optional;
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     @PostMapping("/register")
@@ -39,12 +41,19 @@ public class AuthenticationController {
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
 
-    @PostMapping("/authenticate")
+    @PostMapping("/login")
     public ResponseEntity<?> authenticate(
             @RequestBody AuthenticationRequest request
     ){
         Optional<User> userEmail = userRepository.findByEmail(request.getEmail());
         if (userEmail.isEmpty()) {
+            ErrorResponseMsg errorResponse = ErrorResponseMsg.builder()
+                    .errorMessage("Email or password incorrect")
+                    .build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
+        User user = userEmail.get();
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             ErrorResponseMsg errorResponse = ErrorResponseMsg.builder()
                     .errorMessage("Email or password incorrect")
                     .build();
