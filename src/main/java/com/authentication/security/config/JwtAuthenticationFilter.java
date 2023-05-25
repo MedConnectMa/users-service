@@ -1,5 +1,6 @@
 package com.authentication.security.config;
 
+import com.authentication.security.repository.TokenRepository;
 import com.authentication.security.services.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -23,6 +24,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter { //filter for every request
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final TokenRepository tokenRepository;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
@@ -45,8 +47,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter { //filter for
         userEmail = jwtService.extractUserName(jwt); //get user name from jwt token
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication()==null){ //username exist and the user not login
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail); //call the methode who get the user from database
+
+            var isTokenValid = tokenRepository.findByToken(jwt)
+                    .map(t -> !t.isExpired() && !t.isRevoked())
+                    .orElse(false);
             //if the username exist and the token not expired
-            if (jwtService.isTokenValid(jwt, userDetails)){
+            if (jwtService.isTokenValid(jwt, userDetails) && isTokenValid){
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null, //authorities

@@ -1,4 +1,5 @@
 package com.authentication.security.models.user;
+import com.authentication.security.models.token.Token;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +29,9 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     public Role role;
+
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

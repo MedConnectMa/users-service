@@ -1,10 +1,13 @@
 package com.authentication.security.services;
 
+import com.authentication.security.models.user.User;
+import com.authentication.security.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -12,12 +15,20 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 
 @Service
 public class JwtService {
     private static final String SECRET_KEY = "743777217A25432A462D4A614E645267556B58703273357638782F413F442847";
+
+    @Autowired
+    private final UserRepository userRepository;
+
+    public JwtService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject); //the subject is the userName
@@ -67,6 +78,14 @@ public class JwtService {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY); // Transforms the SECRET_KEY character string into an array of bytes
         return Keys.hmacShaKeyFor(keyBytes); // Create a signing key
 
+    }
+    public int getCurrentUserId(String token) {
+        String username = extractUserName(token);
+        Optional<User> user = userRepository.findByEmail(username);
+        if (user.isEmpty()) {
+            throw new IllegalArgumentException("User not found");
+        }
+        return user.get().getId();
     }
 
 }
