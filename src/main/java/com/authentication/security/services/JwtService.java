@@ -79,13 +79,5 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes); // Create a signing key
 
     }
-    public int getCurrentUserId(String token) {
-        String username = extractUserName(token);
-        Optional<User> user = userRepository.findByEmail(username);
-        if (user.isEmpty()) {
-            throw new IllegalArgumentException("User not found");
-        }
-        return user.get().getId();
-    }
 
 }

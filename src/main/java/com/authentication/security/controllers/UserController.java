@@ -2,14 +2,15 @@ package com.authentication.security.controllers;
 
 
 import com.authentication.security.dto.UserDTO;
+import com.authentication.security.responseMessage.ResponseMsg;
 import com.authentication.security.models.user.User;
 import com.authentication.security.repository.UserRepository;
 import com.authentication.security.services.UserService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -19,7 +20,6 @@ import java.util.List;
 @RequestMapping("api/users")
 @AllArgsConstructor
 public class UserController {
-
     @Autowired
     private UserService userService;
     private UserRepository userRepository;
@@ -36,16 +36,20 @@ public class UserController {
         return userDTOs;
     }
 
+    @Transactional
     @DeleteMapping
-    public ResponseEntity<String> deleteUser() {
-        String token = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
+    public ResponseEntity<?> deleteUser(@RequestHeader("Authorization") String token) {
+        token = token.substring(7);
         try {
             userService.deleteUser(token);
-            return ResponseEntity.ok("User deleted successfully.");
+            ResponseMsg okResponse = new ResponseMsg(HttpStatus.OK.value(), "User deleted successfully");
+            return ResponseEntity.ok(okResponse);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("User not found.");
+            ResponseMsg errorResponse = new ResponseMsg(HttpStatus.BAD_REQUEST.value(), "User Not Found");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to delete this user.");
+            ResponseMsg errorResponse = new ResponseMsg(HttpStatus.BAD_REQUEST.value(), "You are not authorized to delete this user.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
         }
     }
 }
