@@ -17,6 +17,12 @@ public interface TokenRepository extends JpaRepository<Token, Integer> {
 """)
     List<Token> findAllValidTokensByUser(Integer userId);
 
+    @Query("""
+    select t from Token t inner join User u on t.user.id = u.id
+    where u.id = :userId
+""")
+    List<Token> findAllTokensByUser(Integer userId);
+
     Optional<Token> findByToken(String token);
     @Query("""
     SELECT u.id FROM Token t JOIN t.user u WHERE t.token = :token

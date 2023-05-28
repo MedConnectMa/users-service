@@ -1,17 +1,16 @@
-package com.authentication.security.dto;
+package com.authentication.security.models.user;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+@NoArgsConstructor
+@Data
+public class UserUpdateRequest {
     private String fullName;
-    private String email;
-    private String gender;
     private String phone;
     private String cin;
+
 }

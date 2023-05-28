@@ -28,7 +28,7 @@ public class AuthenticationController {
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             ResponseMsg errorResponse = ResponseMsg.builder()
-                    .errorMessage("Email already exist")
+                    .Message("Email already exist")
                     .build();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
@@ -45,14 +45,14 @@ public class AuthenticationController {
         Optional<User> userEmail = userRepository.findByEmail(request.getEmail());
         if (userEmail.isEmpty()) {
             ResponseMsg errorResponse = ResponseMsg.builder()
-                    .errorMessage("Email or password incorrect")
+                    .Message("Email or password incorrect")
                     .build();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
         User user = userEmail.get();
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             ResponseMsg errorResponse = ResponseMsg.builder()
-                    .errorMessage("Email or password incorrect")
+                    .Message("Email or password incorrect")
                     .build();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
