@@ -28,6 +28,7 @@ public class AuthenticationController {
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             ResponseMsg errorResponse = ResponseMsg.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
                     .Message("Email already exist")
                     .build();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
@@ -45,6 +46,7 @@ public class AuthenticationController {
         Optional<User> userEmail = userRepository.findByEmail(request.getEmail());
         if (userEmail.isEmpty()) {
             ResponseMsg errorResponse = ResponseMsg.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
                     .Message("Email or password incorrect")
                     .build();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
@@ -52,6 +54,7 @@ public class AuthenticationController {
         User user = userEmail.get();
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             ResponseMsg errorResponse = ResponseMsg.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
                     .Message("Email or password incorrect")
                     .build();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
