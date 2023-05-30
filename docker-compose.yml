@@ -14,7 +14,7 @@ services:
     #    ports:
     #      - 3307:3306
     environment:
-      MYSQL_DATABASE: springAuthentication
+      MYSQL_DATABASE: SpringAuthentication
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_PASSWORD:
       MYSQL_ROOT_PASSWORD:

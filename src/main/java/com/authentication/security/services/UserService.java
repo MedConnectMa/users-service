@@ -6,13 +6,11 @@ import com.authentication.security.repository.TokenRepository;
 import com.authentication.security.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 
@@ -25,6 +23,17 @@ public class UserService {
     private final TokenRepository tokenRepository;
     public List<User> getUsers(){
         return userRepository.findAll();
+    }
+    public Optional<Integer> getUserId(String token){
+        Optional<Integer> userIdOptional = tokenRepository.findUserIdByToken(token);
+        if (userIdOptional.isPresent()) {
+            Integer userId = userIdOptional.get();
+            boolean exists = userRepository.existsById(userId);
+            if (!exists) {
+                throw new IllegalStateException("User with id " + userId + " not found");
+            }
+        }
+        return userIdOptional;
     }
 
     @Transactional
