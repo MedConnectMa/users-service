@@ -9,5 +9,4 @@ import lombok.*;
 public class ResponseMsg {
     private int status;
     private String Message;
-
 }

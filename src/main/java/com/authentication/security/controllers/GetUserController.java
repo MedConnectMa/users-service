@@ -1,5 +1,7 @@
 package com.authentication.security.controllers;
 
+import com.authentication.security.models.user.User;
+import com.authentication.security.models.user.UserInfo;
 import com.authentication.security.responseMessage.ResponseMsg;
 import com.authentication.security.responseMessage.UserIdResponse;
 import com.authentication.security.services.UserService;
@@ -27,15 +29,19 @@ public class GetUserController {
     public ResponseEntity<?> getUserId(@RequestHeader("Authorization") String token) {
         token = token.substring(7);
         try {
-            Optional<Integer> userIdOptional = userService.getUserId(token);
-            Integer userId = userIdOptional.get();
-            UserIdResponse okResponse = new UserIdResponse(HttpStatus.OK.value(),userId);
-            return ResponseEntity.ok(okResponse);
+            Optional<UserInfo> userOptional = userService.getUser(token);
+
+            if (userOptional.isPresent()) {
+                UserInfo userInfo = userOptional.get();
+                return ResponseEntity.ok(userInfo);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
         } catch (IllegalArgumentException e) {
             ResponseMsg errorResponse = new ResponseMsg(HttpStatus.BAD_REQUEST.value(), "User Not Found");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         } catch (HttpClientErrorException.Forbidden e) {
-            ResponseMsg errorResponse = new ResponseMsg(HttpStatus.FORBIDDEN.value(), "you are not authorized to access the resource");
+            ResponseMsg errorResponse = new ResponseMsg(HttpStatus.FORBIDDEN.value(), "You are not authorized to access the resource");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
         }
     }

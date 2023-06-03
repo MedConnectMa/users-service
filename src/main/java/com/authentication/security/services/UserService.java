@@ -1,6 +1,7 @@
 package com.authentication.security.services;
 
 import com.authentication.security.models.user.User;
+import com.authentication.security.models.user.UserInfo;
 import com.authentication.security.models.user.UserUpdateRequest;
 import com.authentication.security.repository.TokenRepository;
 import com.authentication.security.repository.UserRepository;
@@ -24,16 +25,13 @@ public class UserService {
     public List<User> getUsers(){
         return userRepository.findAll();
     }
-    public Optional<Integer> getUserId(String token){
+    public Optional<UserInfo> getUser(String token) {
         Optional<Integer> userIdOptional = tokenRepository.findUserIdByToken(token);
         if (userIdOptional.isPresent()) {
-            Integer userId = userIdOptional.get();
-            boolean exists = userRepository.existsById(userId);
-            if (!exists) {
-                throw new IllegalStateException("User with id " + userId + " not found");
-            }
+            int userId = userIdOptional.get();
+            return userRepository.findUserDetailsById(userId);
         }
-        return userIdOptional;
+        return Optional.empty();
     }
 
     @Transactional

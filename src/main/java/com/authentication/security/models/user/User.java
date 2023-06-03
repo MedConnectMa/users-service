@@ -1,10 +1,7 @@
 package com.authentication.security.models.user;
 import com.authentication.security.models.token.Token;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,8 +27,10 @@ public class User implements UserDetails {
     private String gender;
     private String phone;
     private String cin;
+    private String address;
     @Enumerated(EnumType.STRING)
     public Role role;
+
 
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;

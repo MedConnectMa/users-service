@@ -1,6 +1,7 @@
 package com.authentication.security.repository;
 
 import com.authentication.security.models.user.User;
+import com.authentication.security.models.user.UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,4 +23,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
                         @Param("fullName") String fullName,
                         @Param("phone") String phone,
                         @Param("cin") String cin);
+
+    @Query("SELECT new com.authentication.security.models.user.UserInfo(u.id, u.fullName, u.email, u.gender, u.phone, u.cin, u.address) " +
+            "FROM User u WHERE u.id = :id")
+    Optional<UserInfo> findUserDetailsById(int id);
+
+
 }

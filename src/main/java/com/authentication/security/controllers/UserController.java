@@ -34,9 +34,6 @@ public class UserController {
             UserDTO userDTO = new UserDTO();
             userDTO.setFullName(user.getFullName());
             userDTO.setEmail(user.getEmail());
-            userDTO.setGender(user.getGender());
-            userDTO.setPhone(user.getPhone());
-            userDTO.setCin(user.getCin());
             userDTOs.add(userDTO);
         }
         return userDTOs;
