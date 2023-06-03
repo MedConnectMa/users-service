@@ -2,8 +2,6 @@ package com.authentication.security.repository;
 
 import com.authentication.security.models.user.User;
 import com.authentication.security.models.user.UserInfo;
-import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,11 +16,15 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Modifying
     @Query("UPDATE User u SET u.fullName = :fullName, " +
             "u.phone = :phone, " +
-            "u.cin = :cin WHERE u.id = :userId")
+            "u.cin = :cin," +
+            "u.address = :address " +
+            "WHERE u.id = :userId")
     void updateUserInfo(@Param("userId") Integer userId,
                         @Param("fullName") String fullName,
                         @Param("phone") String phone,
-                        @Param("cin") String cin);
+                        @Param("cin") String cin,
+                        @Param("address") String address);
+
 
     @Query("SELECT new com.authentication.security.models.user.UserInfo(u.id, u.fullName, u.email, u.gender, u.phone, u.cin, u.address) " +
             "FROM User u WHERE u.id = :id")

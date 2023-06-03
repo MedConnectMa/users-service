@@ -1,35 +1,53 @@
 package com.authentication.security.controllers;
 
-import com.authentication.security.models.user.User;
+
+import com.authentication.security.dto.UserDTO;
 import com.authentication.security.models.user.UserInfo;
+import com.authentication.security.models.user.UserUpdateRequest;
 import com.authentication.security.responseMessage.ResponseMsg;
-import com.authentication.security.responseMessage.UserIdResponse;
+import com.authentication.security.models.user.User;
+import com.authentication.security.repository.UserRepository;
 import com.authentication.security.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-
 @RestController
-@RequestMapping("api/user")
+@RequestMapping("api/users")
 @AllArgsConstructor
-public class GetUserController {
+public class UsersController {
     @Autowired
     private UserService userService;
-
+    private UserRepository userRepository;
     @GetMapping
-    public ResponseEntity<?> getUserId(@RequestHeader("Authorization") String token) {
-        token = token.substring(7);
+    public List<UserDTO> getUsers(){
+        List<User> users = userRepository.findAll();
+        List<UserDTO> userDTOs = new ArrayList<UserDTO>();
+        for(User user : users){
+            UserDTO userDTO = new UserDTO();
+            userDTO.setFullName(user.getFullName());
+            userDTO.setEmail(user.getEmail());
+            userDTO.setGender(user.getGender());
+            userDTO.setPhone(user.getPhone());
+            userDTO.setCin(user.getCin());
+            userDTO.setAddress(user.getAddress());
+            userDTOs.add(userDTO);
+        }
+        return userDTOs;
+    }
+
+    //Get User by Id
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable int id){
         try {
-            Optional<UserInfo> userOptional = userService.getUser(token);
+            Optional<UserInfo> userOptional = userService.getUserById(id);
 
             if (userOptional.isPresent()) {
                 UserInfo userInfo = userOptional.get();
@@ -45,5 +63,7 @@ public class GetUserController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
         }
     }
+
+
 
 }

@@ -33,6 +33,9 @@ public class UserService {
         }
         return Optional.empty();
     }
+    public Optional<UserInfo> getUserById(int id){
+        return userRepository.findUserDetailsById(id);
+    }
 
     @Transactional
     public void deleteUser(String token) {
@@ -71,7 +74,8 @@ public class UserService {
             if(!validUserTokens.isEmpty()){
                 userRepository.updateUserInfo(userId, userUpdateRequest.getFullName(),
                                             userUpdateRequest.getPhone(),
-                                            userUpdateRequest.getCin());
+                                            userUpdateRequest.getCin(),
+                                            userUpdateRequest.getAddress());
             }
         }
     }
