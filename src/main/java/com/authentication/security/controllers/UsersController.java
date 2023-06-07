@@ -56,8 +56,8 @@ public class UsersController {
                 return ResponseEntity.notFound().build();
             }
         } catch (IllegalArgumentException e) {
-            ResponseMsg errorResponse = new ResponseMsg(HttpStatus.BAD_REQUEST.value(), "User Not Found");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+            ResponseMsg errorResponse = new ResponseMsg(HttpStatus.NOT_FOUND.value(), "User Not Found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         } catch (HttpClientErrorException.Forbidden e) {
             ResponseMsg errorResponse = new ResponseMsg(HttpStatus.FORBIDDEN.value(), "You are not authorized to access the resource");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
