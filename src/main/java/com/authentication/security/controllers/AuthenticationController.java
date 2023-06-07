@@ -29,7 +29,7 @@ public class AuthenticationController {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             ResponseMsg errorResponse = ResponseMsg.builder()
                     .status(HttpStatus.BAD_REQUEST.value())
-                    .Message("Email already exist")
+                    .Message("Email already exists!")
                     .build();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
