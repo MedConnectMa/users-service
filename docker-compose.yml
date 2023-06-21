@@ -18,4 +18,3 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_PASSWORD:
       MYSQL_ROOT_PASSWORD:
-

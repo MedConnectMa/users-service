@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,7 +19,7 @@ import java.util.List;
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String fullName;
     @Column(unique=true)
@@ -26,6 +27,7 @@ public class User implements UserDetails {
     private String password;
     private String gender;
     private String phone;
+    private LocalDate dateOfBirth;
     private String cin;
     private String address;
     @Enumerated(EnumType.STRING)

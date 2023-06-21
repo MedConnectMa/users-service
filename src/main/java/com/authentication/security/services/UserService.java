@@ -44,7 +44,7 @@ public class UserService {
             Integer userId = userIdOptional.get();
             boolean exists = userRepository.existsById(userId);
             if (!exists) {
-                throw new IllegalStateException("User with id " + userId + " not found");
+                throw new IllegalStateException("User with id " + userId + " not found!");
             }
             var validUserTokens = tokenRepository.findAllValidTokensByUser(userId);
             if(!validUserTokens.isEmpty()){
