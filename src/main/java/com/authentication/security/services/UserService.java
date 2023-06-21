@@ -58,8 +58,6 @@ public class UserService {
             throw new IllegalArgumentException("Invalid token");
         }
     }
-
-
     @Transactional
     @Modifying
     public void updateUser(String token, UserUpdateRequest userUpdateRequest){
