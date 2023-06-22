@@ -29,7 +29,7 @@ public class SecurityConfiguration {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/auth/**", "/api/error")//White list authorized without token
+                .requestMatchers("/api/auth/**", "/api/error", "/api/users/**")//White list authorized without token
                 .permitAll()
                 .anyRequest()
                 .authenticated()//any other request should be authenticated
